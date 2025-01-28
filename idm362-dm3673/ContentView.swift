@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
+    @State private var showingHelp = false // to control showing the help alert
     
     var body: some View {
         VStack(spacing: 0) {
@@ -25,27 +26,25 @@ struct ContentView: View {
             HStack {
                 ZStack(alignment: .leading) {
                     if newTaskText.isEmpty {
-                        Text("Add a task and check to glow :)")
-                            .foregroundColor(Color.secondary) //
-                            .padding(.leading, 10)
+                        Text("add a task and check to glow :)")
+                            .foregroundColor(Color.secondary) // placeholder text color
+                            .padding(.leading, 10) // padding for the placeholder
                     }
-                                
-                                TextField("Add a task and check to glow :)", text: $newTaskText)
-                                    .padding(.vertical, 10)
-                                    .padding(.horizontal, 15)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color(uiColor: UIColor.systemGray6))
-                                    )
-                                    .foregroundColor(Color.primary)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color(uiColor: UIColor.separator), lineWidth: 1)
-                                    )
-                                        
-                                        }
-                    .padding(.leading)
                     
+                    TextField("add a task and check to glow :)", text: $newTaskText)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(uiColor: UIColor.systemGray6))
+                        )
+                        .foregroundColor(Color.primary)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(uiColor: UIColor.separator), lineWidth: 1)
+                        )
+                }
+                .padding(.leading)
                 
                 Button(action: {
                     addTask()
@@ -75,9 +74,26 @@ struct ContentView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color(uiColor: UIColor.systemBackground))
+            
+            // help button at the bottom left
+            Button(action: {
+                showingHelp.toggle() // toggle the help alert
+            }) {
+                Image(systemName: "questionmark.circle.fill")
+                    .font(.title)
+                    .foregroundColor(Color(hue: 0.837, saturation: 0.369, brightness: 0.886))
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(Color(uiColor: UIColor.systemBackground))
         .scrollContentBackground(.hidden)
+        .alert(isPresented: $showingHelp) {
+            Alert(title: Text("A little tip:").bold(), // bold the "A little tip:"
+                  message: Text("to add a task, click the '+' button. if you want to delete it, just swipe left!"),
+                  dismissButton: .default(Text("understoood"))
+            )
+        }
     }
     
     // adding a new task to the list
@@ -87,7 +103,7 @@ struct ContentView: View {
         newTaskText = ""
     }
     
-    // removing the task by seiping it
+    // removing the task by swiping it
     func deleteTask(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
     }
@@ -104,8 +120,8 @@ struct Task: Identifiable {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-                    .preferredColorScheme(.dark) // Preview in dark mode
-                ContentView()
-                    .preferredColorScheme(.light)
+            .preferredColorScheme(.dark) // preview in dark mode
+        ContentView()
+            .preferredColorScheme(.light) // preview in light mode
     }
 }
