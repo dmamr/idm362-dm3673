@@ -25,12 +25,12 @@ struct ContentView: View {
             HStack {
                 ZStack(alignment: .leading) {
                     if newTaskText.isEmpty {
-                        Text("Add a task...")
+                        Text("Add a task and check to glow :)")
                             .foregroundColor(Color.secondary) //
                             .padding(.leading, 10)
                     }
                                 
-                                TextField("Add a task...", text: $newTaskText)
+                                TextField("Add a task and check to glow :)", text: $newTaskText)
                                     .padding(.vertical, 10)
                                     .padding(.horizontal, 15)
                                     .background(
