@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     // get color scheme from device
     @Environment(\.colorScheme) var colorScheme
+    @State private var userPicked: Int = 0
+
     
     var body: some View {
         ZStack() {
@@ -47,7 +49,17 @@ struct ContentView: View {
                     .foregroundColor(colorScheme == .dark ? .purple : .white)
                     .padding()
                 VStack {
-                    
+                    Picker("Pick", selection: $userPicked) {
+     //                   Text("Yes").tag(0)
+     //                   Text("No").tag(1)
+     //                   Text("Trash").tag(2)
+                        Image(systemName: "hand.thumbsup").tag(0)
+                        Image(systemName: "hand.thumbsdown").tag(1)
+                        Image(systemName: "trash").tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding()
+                    Text("Value: \(userPicked)")
                 }
                 
                 
