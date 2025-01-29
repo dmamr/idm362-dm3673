@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     // get color scheme from device
     @Environment(\.colorScheme) var colorScheme
-    @State private var userPicked: Int = 0
+    @State private var userPicked = 0
 
     
     var body: some View {
