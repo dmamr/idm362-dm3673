@@ -51,7 +51,9 @@ struct ContentView: View {
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
+                        .scaleEffect(1.5)
                         .foregroundColor(Color(hue: 0.837, saturation: 0.369, brightness: 0.886))
+                        .padding()
                 }
                 .padding(.trailing)
             }
@@ -81,7 +83,9 @@ struct ContentView: View {
             }) {
                 Image(systemName: "questionmark.circle.fill")
                     .font(.title)
+                    .scaleEffect(1.5)
                     .foregroundColor(Color(hue: 0.837, saturation: 0.369, brightness: 0.886))
+                    .padding()
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -120,8 +124,5 @@ struct Task: Identifiable {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .preferredColorScheme(.dark) // preview in dark mode
-        ContentView()
-            .preferredColorScheme(.light) // preview in light mode
     }
 }
