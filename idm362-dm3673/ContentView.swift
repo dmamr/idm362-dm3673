@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
-    @State private var showingHelp = false // to control showing the help alert
+    @State private var showingHelp = false // to control showing the custom help alert
     
     var body: some View {
         VStack(spacing: 0) {
@@ -92,12 +92,44 @@ struct ContentView: View {
         }
         .background(Color(uiColor: UIColor.systemBackground))
         .scrollContentBackground(.hidden)
-        .alert(isPresented: $showingHelp) {
-            Alert(title: Text("A little tip:").bold(), // bold the "A little tip:"
-                  message: Text("to add a task, click the '+' button. if you want to delete it, just swipe left!"),
-                  dismissButton: .default(Text("understoood"))
-            )
-        }
+        // custom alert overlay
+        .overlay(
+            showingHelp ? Color.black.opacity(0.4).edgesIgnoringSafeArea(.all) : nil
+        )
+        .overlay(
+            VStack {
+                if showingHelp {
+                    VStack(spacing: 20) {
+                        Text("A little tip:")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.purple)
+                        
+                        Text("To add a task, click the '+' button. If you want to delete it, just swipe left!")
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 20)
+                        
+                        Button(action: {
+                            showingHelp = false
+                        }) {
+                            Text("Understood")
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.purple)
+                                .cornerRadius(10)
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    .padding()
+                    .background(Color(uiColor: UIColor.systemBackground))
+                    .cornerRadius(15)
+                    .shadow(radius: 10)
+                    .padding(40)
+                }
+            }
+        )
     }
     
     // adding a new task to the list
