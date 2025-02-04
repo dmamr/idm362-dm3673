@@ -4,14 +4,23 @@ struct ContentView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
     @State private var showingHelp = false // to control showing the custom help alert
+    @State private var animateSparkle = false
     
     var body: some View {
         VStack(spacing: 0) {
             // app title
             HStack {
-                Image(systemName: "sparkle")
-                    .imageScale(.large)
-                    .foregroundColor(.purple)
+                if #available(iOS 17.0, *) {
+                    Image(systemName: "sparkle")
+                        .imageScale(.large)
+                        .foregroundColor(.purple)
+                        .symbolEffect(.pulse)
+                        .animation(.easeInOut(duration: 1).repeatForever(), value: animateSparkle)
+                } else {
+                       Image(systemName: "sparkle")
+                           .imageScale(.large)
+                           .foregroundColor(.purple) // fallback for older versions
+                   }
                 Text("ChecknGlow")
                     .font(.largeTitle)
                     .fontWeight(.bold)
