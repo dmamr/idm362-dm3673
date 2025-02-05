@@ -9,7 +9,7 @@ struct ContentView: View {
     
     // define theme colors
     var backgroundColor: Color {
-        colorScheme == .dark ? Color(hex: "3b2c39") : Color(hex: "f9f6f4")
+        colorScheme == .dark ? Color(hex: "3b2c39") : Color(hex: "f6efe9")
     }
     var textColor: Color {
         colorScheme == .dark ? Color(hex: "f3d9ed") : Color(hex: "3b2c39")
