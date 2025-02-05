@@ -59,6 +59,7 @@ struct ContentView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding()
+                    .background(Color("colorWeatherBG"))
                     Text("Value: \(userPicked)")
                 }
                 
