@@ -7,12 +7,43 @@
 
 import SwiftUI
 
+// create a data model
+class UserData: ObservableObject {
+    @Published var ndx: Int = 0
+}
+
 struct mainView: View {
+    @StateObject var userData = UserData()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+        TabView {
+            // Home Tab
+            Text("Home")
+            ContentView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+            
+            // About Tab
+            Text("User Picked \(userData.ndx)")
+                .tabItem {
+                    Label("About", systemImage: "info.circle.fill")
+                }
+            
+            // Settings Tab
+            Text("Well, nothing new. In the settings tab you still see that the user picked \(userData.ndx)")
+                .padding()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+        } // end tab view
+        .tint(Color("colorWeatherBG"))
+        .environmentObject(userData)
+    } //end body
 }
 
 #Preview {
     mainView()
+    // make userdata available
+        .environmentObject(UserData())
 }
