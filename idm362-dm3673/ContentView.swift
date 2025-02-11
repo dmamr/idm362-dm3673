@@ -1,21 +1,39 @@
 import SwiftUI
 
 struct ContentView: View {
+    var body: some View {
+        TabView {
+            ToDoView()
+                .tabItem {
+                    Label("To Do", systemImage: "checkmark.circle")
+                }
+            InstructionsView()
+                .tabItem {
+                    Label("Instructions", systemImage: "info.circle")
+                }
+        }
+    }
+}
+
+struct ToDoView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
-    @State private var showingHelp = false // to control showing the custom help alert
     @State private var animateSparkle = false // for sparkle animation
     @Environment(\.colorScheme) var colorScheme // detect dark/light mode
     
-    // define theme colors
+    // define theme colors using explicit RGB values
     var backgroundColor: Color {
-        colorScheme == .dark ? Color(hex: "3b2c39") : Color(hex: "f6efe9")
+        colorScheme == .dark ?
+            Color(red: 59/255, green: 44/255, blue: 57/255) :
+            Color(red: 246/255, green: 239/255, blue: 233/255)
     }
     var textColor: Color {
-        colorScheme == .dark ? Color(hex: "f3d9ed") : Color(hex: "3b2c39")
+        colorScheme == .dark ?
+            Color(red: 243/255, green: 217/255, blue: 237/255) :
+            Color(red: 59/255, green: 44/255, blue: 57/255)
     }
     var accentColor: Color {
-        Color(hex: "c3a5c1")
+        Color(red: 195/255, green: 165/255, blue: 193/255)
     }
     
     var body: some View {
@@ -31,7 +49,7 @@ struct ContentView: View {
                 } else {
                     Image(systemName: "sparkle")
                         .imageScale(.large)
-                        .foregroundColor(accentColor) // fallback for older versions
+                        .foregroundColor(accentColor)
                 }
                 Text("ChecknGlow")
                     .font(.largeTitle)
@@ -41,14 +59,14 @@ struct ContentView: View {
             .padding()
             .frame(maxWidth: .infinity)
             .background(backgroundColor)
-            .shadow(color: Color(hex: "c3a5c1").opacity(0.3), radius: 7, x: 0, y: 2)
+            .shadow(color: accentColor.opacity(0.3), radius: 7, x: 0, y: 2)
             
-            // field for the text > adding the task
+            // field for adding a task
             HStack {
                 ZStack(alignment: .leading) {
                     if newTaskText.isEmpty {
                         Text("add a task and check to glow :)")
-                            .foregroundColor(textColor.opacity(0.6)) // lighter text color
+                            .foregroundColor(textColor.opacity(0.6))
                             .padding(.leading, 10)
                     }
                     
@@ -80,78 +98,40 @@ struct ContentView: View {
             }
             .padding(.vertical)
             
-            // task list loop
+            // task list loop with collapsable notes for each task
             List {
                 ForEach($tasks) { $task in
-                    HStack {
-                        Text(task.title)
-                            .strikethrough(task.isDone, color: accentColor)
-                            .foregroundColor(task.isDone ? textColor.opacity(0.6) : textColor)
-                        Spacer()
-                        Toggle("", isOn: $task.isDone)
-                            .labelsHidden()
-                            .tint(accentColor)
+                    DisclosureGroup(isExpanded: $task.isExpanded) {
+                        // expanded view for adding notes
+                        TextEditor(text: $task.notes)
+                            .frame(height: 100)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                            )
+                            .padding(.horizontal, 10)
+                    } label: {
+                        HStack {
+                            Text(task.title)
+                                .strikethrough(task.isDone, color: accentColor)
+                                .foregroundColor(task.isDone ? textColor.opacity(0.6) : textColor)
+                            Spacer()
+                            Toggle("", isOn: $task.isDone)
+                                .labelsHidden()
+                                .tint(accentColor)
+                        }
                     }
                 }
                 .onDelete(perform: deleteTask)
             }
             .scrollContentBackground(.hidden)
             .background(backgroundColor)
-            
-            // help button at the bottom left
-            Button(action: {
-                showingHelp.toggle()
-            }) {
-                Image(systemName: "questionmark.circle.fill")
-                    .font(.title)
-                    .scaleEffect(1.5)
-                    .foregroundColor(accentColor)
-                    .padding()
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(backgroundColor)
         .scrollContentBackground(.hidden)
-        // custom alert overlay
-        .overlay(
-            showingHelp ? Color.black.opacity(0.4).edgesIgnoringSafeArea(.all) : nil
-        )
-        .overlay(
-            VStack {
-                if showingHelp {
-                    VStack(spacing: 20) {
-                        Text("a little tip:")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(accentColor)
-                        
-                        Text("to add a task, click the '+' button. if you want to delete it, just swipe left!")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(textColor)
-                            .padding(.horizontal, 20)
-                        
-                        Button(action: {
-                            showingHelp = false
-                        }) {
-                            Text("understoood")
-                                .fontWeight(.bold)
-                                .foregroundColor(backgroundColor)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(accentColor)
-                                .cornerRadius(10)
-                        }
-                        .padding(.horizontal, 20)
-                    }
-                    .padding()
-                    .background(backgroundColor)
-                    .cornerRadius(15)
-                    .shadow(radius: 10)
-                    .padding(40)
-                }
-            }
-        )
+        .onAppear {
+            animateSparkle = true
+        }
     }
     
     // adding a new task to the list
@@ -167,38 +147,63 @@ struct ContentView: View {
     }
 }
 
+struct InstructionsView: View {
+    @Environment(\.colorScheme) var colorScheme
+
+    var backgroundColor: Color {
+        colorScheme == .dark ?
+            Color(red: 59/255, green: 44/255, blue: 57/255) :
+            Color(red: 246/255, green: 239/255, blue: 233/255)
+    }
+    var textColor: Color {
+        colorScheme == .dark ?
+            Color(red: 243/255, green: 217/255, blue: 237/255) :
+            Color(red: 59/255, green: 44/255, blue: 57/255)
+    }
+    var accentColor: Color {
+        Color(red: 195/255, green: 165/255, blue: 193/255)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Image(systemName: "sparkle")
+                    .imageScale(.large)
+                    .foregroundColor(accentColor)
+                Text("Instructions")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(textColor)
+            }
+            .padding(.top, 80)
+            .padding(.bottom, 20)
+            .frame(maxWidth: .infinity)
+            .background(backgroundColor)
+            .shadow(color: accentColor.opacity(0.3), radius: 7, x: 0, y: 2)
+            
+            
+            // instructions body (centered)
+            Text("To add a task, type your task in the input field and click the '+' button. To delete a task, simply swipe left on the task in the list.")
+                .font(.body)
+                .foregroundColor(textColor)
+                .multilineTextAlignment(.leading)
+                .padding()
+            
+            Spacer()
+        }
+        .background(backgroundColor)
+        .edgesIgnoringSafeArea(.all)
+    }
+}
+
 // task unique identifier, etc.
 struct Task: Identifiable {
     let id: UUID
     var title: String
     var isDone: Bool
+    var notes: String = ""
+    var isExpanded: Bool = false
 }
-
-// extension to use hex colors
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 6: // RGB (no alpha)
-            (a, r, g, b) = (255, (int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
-        case 8: // ARGB (alpha included)
-            (a, r, g, b) = ((int >> 24) & 0xFF, (int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue: Double(b) / 255,
-            opacity: Double(a) / 255
-        )
-    }
-}
-
 // preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
