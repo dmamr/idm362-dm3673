@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var animateSparkle = false // for sparkle animation
     @Environment(\.colorScheme) var colorScheme // detect dark/light mode
     
-    // define theme colors using explicit RGB values
+    // for some reason stopped working in hex, but worked in rgb
     var backgroundColor: Color {
         colorScheme == .dark ?
         Color(red: 59/255, green: 44/255, blue: 57/255) :
@@ -90,9 +90,9 @@ struct ContentView: View {
                         // expanded view: "important notes..." text above the TextEditor
                         VStack(alignment: .leading, spacing: 5) {
                             Text("important notes...")
-                                .font(.caption)
+                                .font(.callout)
                                 .foregroundColor(textColor.opacity(0.7))
-                                .padding(.horizontal, 10)
+                            
                             TextEditor(text: $task.notes)
                                 .frame(height: 100)
                                 .overlay(

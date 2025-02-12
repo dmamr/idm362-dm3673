@@ -14,16 +14,14 @@ struct MainView: View {
             Color(red: 243/255, green: 217/255, blue: 237/255) :
             Color(red: 59/255, green: 44/255, blue: 57/255)
     }
-    var accentColor: Color {
-        Color(red: 195/255, green: 165/255, blue: 193/255)
-    }
-    
+ 
     var body: some View {
         TabView {
             // First tab: To-Do
             ContentView()
                 .tabItem {
-                    Label("to do", systemImage: "checkmark.circle")
+                    Image(systemName: "checkmark.circle")
+                    Text("to do")
                 }
             
             // Second tab: Instructions
@@ -32,8 +30,8 @@ struct MainView: View {
                     Label("instructions", systemImage: "info.circle")
                 }
         }
-        .accentColor(accentColor)
         .background(backgroundColor.edgesIgnoringSafeArea(.all))
+        
     }
 }
 
