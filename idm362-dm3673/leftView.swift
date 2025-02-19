@@ -1,13 +1,13 @@
 //
-//  ContentView.swift
+//  leftView.swift
 //  idm362-dm3673
 //
-//  Created by Dariya Mamratova on 1/14/25.
+//  Created by Dariya Mamratova on 2/18/25.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct leftView: View {
 
     
     // get color scheme from device
@@ -51,7 +51,7 @@ struct ContentView: View {
                             whichView = "right"
                     }
                 )
-                Text("Hello!")
+                Text("How are you?")
                     .foregroundColor(.white)
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -62,10 +62,10 @@ struct ContentView: View {
             
         }
         
-    } // end body
+    }
 
 #Preview {
     // view switcher with var binding
     @Previewable @State var whichView: String = ""
-    return ContentView(whichView: $whichView)
+    return leftView(whichView: $whichView)
 }
