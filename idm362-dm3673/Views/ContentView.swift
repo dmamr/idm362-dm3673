@@ -52,7 +52,7 @@ struct ContentView: View {
                     if newTaskText.isEmpty {
                         Text("add a task and check to glow :)")
                             .foregroundColor(textColor.opacity(0.6))
-                            .padding(.leading, 10)
+                            .padding(.leading, 15)
                     }
                     
                     TextField("", text: $newTaskText)
