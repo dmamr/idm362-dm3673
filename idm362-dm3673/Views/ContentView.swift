@@ -4,39 +4,38 @@ struct ContentView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
     @State private var animateSparkle = false // for sparkle animation
+    @State private var sparkleFrame = 0 // keeps track of animation frames
     @Environment(\.colorScheme) var colorScheme // detect dark/light mode
     
     // using asset catalog colors
-    var backgroundColor: Color {
-        Color("BackgroundColor")
+    var backgroundColor: Color { Color("BackgroundColor") }
+    var textColor: Color { Color("TextColor") }
+    var accentColor: Color { Color("AccentColor") }
+
+    // selecting correct folder for animation based on color scheme
+    var sparkleImageName: String {
+        colorScheme == .dark ?
+        "DarkSparkleAnimation/animated_dark_sparkle_\(String(format: "%05d", sparkleFrame))" :
+        "LightSparkleAnimation/animated_light_sparkle_\(String(format: "%05d", sparkleFrame))"
     }
-    var textColor: Color {
-        Color("TextColor")
-    }
-    var accentColor: Color {
-        Color("AccentColor")
-    }
- 
+    
+    
     
     var body: some View {
         VStack(spacing: 0) {
-            // app title
+            // app title with animated sparkle
             HStack {
-                if #available(iOS 17.0, *) {
-                    Image(systemName: "sparkle")
-                        .imageScale(.large)
-                        .foregroundColor(accentColor)
-                        .symbolEffect(.pulse)
-                        .animation(.easeInOut(duration: 1).repeatForever(), value: animateSparkle)
-                } else {
-                    Image(systemName: "sparkle")
-                        .imageScale(.large)
-                        .foregroundColor(accentColor)
-                }
+                Image(sparkleImageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30, height: 30)
+                    .onAppear { startAnimation() } // starts the animation
+                
                 Text("checknglow")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(textColor)
+                
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -62,7 +61,7 @@ struct ContentView: View {
                         .foregroundColor(textColor)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(accentColor, lineWidth: 1)
+                                .stroke(textColor, lineWidth: 1)
                         )
                 }
                 .padding(.leading)
@@ -73,8 +72,9 @@ struct ContentView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
                         .scaleEffect(1.5)
-                        .foregroundColor(accentColor)
+                        .foregroundColor(textColor)
                         .padding()
+                    
                 }
                 .padding(.trailing)
             }
@@ -122,6 +122,13 @@ struct ContentView: View {
         }
     }
     
+    // function to cycle through animation frames
+    func startAnimation() {
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+            sparkleFrame = (sparkleFrame + 1) % 48 // Loop through frames 0-47
+        }
+    }
+    
     // adding a new task to the list
     func addTask() {
         guard !newTaskText.isEmpty else { return }
@@ -143,6 +150,7 @@ struct Task: Identifiable {
     var notes: String = ""
     var isExpanded: Bool = false
 }
+
 // preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
