@@ -6,20 +6,17 @@ struct ContentView: View {
     @State private var animateSparkle = false // for sparkle animation
     @Environment(\.colorScheme) var colorScheme // detect dark/light mode
     
-    // for some reason stopped working in hex, but worked in rgb
+    // using asset catalog colors
     var backgroundColor: Color {
-        colorScheme == .dark ?
-        Color(red: 59/255, green: 44/255, blue: 57/255) :
-        Color(red: 246/255, green: 239/255, blue: 233/255)
+        Color("BackgroundColor")
     }
     var textColor: Color {
-        colorScheme == .dark ?
-        Color(red: 243/255, green: 217/255, blue: 237/255) :
-        Color(red: 59/255, green: 44/255, blue: 57/255)
+        Color("TextColor")
     }
     var accentColor: Color {
-        Color(red: 195/255, green: 165/255, blue: 193/255)
+        Color("AccentColor")
     }
+ 
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,7 +33,7 @@ struct ContentView: View {
                         .imageScale(.large)
                         .foregroundColor(accentColor)
                 }
-                Text("ChecknGlow")
+                Text("checknglow")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(textColor)
