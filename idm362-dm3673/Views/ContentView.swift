@@ -4,44 +4,40 @@ struct ContentView: View {
     @State private var tasks: [Task] = [] // task list array
     @State private var newTaskText: String = "" // input field
     @State private var animateSparkle = false // for sparkle animation
+    @State private var sparkleFrame = 0 // keeps track of animation frames
     @Environment(\.colorScheme) var colorScheme // detect dark/light mode
     
     // using asset catalog colors
-    var backgroundColor: Color {
-        Color("BackgroundColor")
+    var backgroundColor: Color { Color("BackgroundColor") }
+    var textColor: Color { Color("TextColor") }
+    var accentColor: Color { Color("AccentColor") }
+
+    // selecting correct folder for animation based on color scheme
+    var sparkleImageName: String {
+        colorScheme == .dark ?
+        "DarkSparkleAnimation/animated_dark_sparkle_\(String(format: "%05d", sparkleFrame))" :
+        "LightSparkleAnimation/animated_light_sparkle_\(String(format: "%05d", sparkleFrame))"
     }
-    var textColor: Color {
-        Color("TextColor")
-    }
-    var accentColor: Color {
-        Color("AccentColor")
-    }
- 
     
     var body: some View {
-        VStack(spacing: 0) {
-            // app title
-            HStack {
-                if #available(iOS 17.0, *) {
-                    Image(systemName: "sparkle")
-                        .imageScale(.large)
-                        .foregroundColor(accentColor)
-                        .symbolEffect(.pulse)
-                        .animation(.easeInOut(duration: 1).repeatForever(), value: animateSparkle)
-                } else {
-                    Image(systemName: "sparkle")
-                        .imageScale(.large)
-                        .foregroundColor(accentColor)
+            VStack(spacing: 0) {
+                // app title with animated sparkle
+                HStack {
+                    Image(sparkleImageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
+                        .onAppear { startAnimation() } // starts the animation
+                    
+                    Text("checknglow")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(textColor)
                 }
-                Text("checknglow")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(textColor)
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(backgroundColor)
-            .shadow(color: accentColor.opacity(0.3), radius: 7, x: 0, y: 2)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(backgroundColor)
+                .shadow(color: accentColor.opacity(0.3), radius: 7, x: 0, y: 2)
             
             // field for adding a task
             HStack {
@@ -115,6 +111,7 @@ struct ContentView: View {
                     }
                     .listRowBackground(Color.clear) // Removes default background
                 }
+                .onMove(perform: moveTask) // Enable drag-to-reorder
                 .onDelete(perform: deleteTask)
             }
             .listStyle(.plain) // Makes the list plain, avoiding additional styles
@@ -127,7 +124,12 @@ struct ContentView: View {
             animateSparkle = true
         }
     }
-    
+    // function to cycle through animation frames
+        func startAnimation() {
+            Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
+                sparkleFrame = (sparkleFrame + 1) % 48 // Loop through frames 00000-00047
+            }
+        }
     // adding a new task to the list
     func addTask() {
         guard !newTaskText.isEmpty else { return }
@@ -138,6 +140,11 @@ struct ContentView: View {
     // removing the task by swiping it
     func deleteTask(at offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
+    }
+    
+    // moving the task by dragging
+    func moveTask(from source: IndexSet, to destination: Int) {
+        tasks.move(fromOffsets: source, toOffset: destination)
     }
 }
 
