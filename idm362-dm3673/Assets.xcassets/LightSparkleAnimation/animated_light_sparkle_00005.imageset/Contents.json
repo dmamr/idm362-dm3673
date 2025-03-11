@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "animated_light_sparkle_00005.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "animated_light_sparkle_00005.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
