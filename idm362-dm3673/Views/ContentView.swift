@@ -62,7 +62,7 @@ struct ContentView: View {
                         .foregroundColor(textColor)
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(accentColor, lineWidth: 1)
+                                .stroke(textColor, lineWidth: 1)
                         )
                 }
                 .padding(.leading)
@@ -73,18 +73,15 @@ struct ContentView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
                         .scaleEffect(1.5)
-                        .foregroundColor(accentColor)
+                        .foregroundColor(textColor)
                         .padding()
                 }
                 .padding(.trailing)
             }
             .padding(.vertical)
-            
-            // task list loop with collapsable notes for each task
             List {
                 ForEach($tasks) { $task in
                     DisclosureGroup(isExpanded: $task.isExpanded) {
-                        // expanded view: "important notes..." text above the TextEditor
                         VStack(alignment: .leading, spacing: 5) {
                             Text("important notes...")
                                 .font(.callout)
@@ -94,7 +91,7 @@ struct ContentView: View {
                                 .frame(height: 100)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                                        .stroke(textColor.opacity(0.5), lineWidth: 1)
                                 )
                                 .frame(maxWidth: .infinity)
                         }
@@ -108,11 +105,20 @@ struct ContentView: View {
                                 .labelsHidden()
                                 .tint(accentColor)
                         }
+                        .padding()
+                        .background(backgroundColor)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(textColor, lineWidth: 1)
+                        )
                     }
+                    .listRowBackground(Color.clear) // Removes default background
                 }
                 .onDelete(perform: deleteTask)
             }
-            .scrollContentBackground(.hidden)
+            .listStyle(.plain) // Makes the list plain, avoiding additional styles
+            .scrollContentBackground(.hidden) // Prevents list background from interfering
             .background(backgroundColor)
         }
         .background(backgroundColor)
