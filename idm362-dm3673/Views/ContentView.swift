@@ -37,7 +37,7 @@ struct ContentView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(backgroundColor)
-                .shadow(color: accentColor.opacity(0.3), radius: 7, x: 0, y: 2)
+                .shadow(color: accentColor.opacity(0.5), radius: 5, x: 0, y: 2)
             
             // field for adding a task
             HStack {

@@ -21,6 +21,7 @@ struct MainView: View {
                 .tabItem {
                     Image(systemName: "checkmark.circle")
                     Text("to do")
+        
                 }
             
             // Second tab: Instructions
